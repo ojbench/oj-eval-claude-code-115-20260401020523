@@ -57,6 +57,12 @@ class unique_ptr {
         ptr = nullptr;
     }
 
+    // 重置为新指针。同时释放当前指针指向的内存。
+    void reset(_Tp *p) {
+        delete ptr;
+        ptr = p;
+    }
+
     // 转移所有权，返回指针指向的对象的地址
     // 同时，自己要置空。
     _Tp *release() {
@@ -71,6 +77,11 @@ class unique_ptr {
         return ptr;
     }
 
+    // 转换为 bool，检查指针是否为空
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+
     // 重载 * 运算符(解引用)，返回指针指向的对象的引用
     _Tp &operator*() const {
         return *ptr;
@@ -79,6 +90,13 @@ class unique_ptr {
     // 重载 -> 运算符(成员访问)，返回指针指向的对象的地址
     _Tp *operator->() const {
         return ptr;
+    }
+
+    // 交换两个 unique_ptr
+    void swap(unique_ptr &other) {
+        _Tp *temp = ptr;
+        ptr = other.ptr;
+        other.ptr = temp;
     }
 };
 
