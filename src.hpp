@@ -53,14 +53,18 @@ class unique_ptr {
 
     // 重置为空指针。同时释放指针指向的内存。
     void reset() {
-        delete ptr;
+        _Tp* old = ptr;
         ptr = nullptr;
+        delete old;
     }
 
     // 重置为新指针。同时释放当前指针指向的内存。
     void reset(_Tp *p) {
-        delete ptr;
-        ptr = p;
+        if (ptr != p) {
+            _Tp* old = ptr;
+            ptr = p;
+            delete old;
+        }
     }
 
     // 转移所有权，返回指针指向的对象的地址
